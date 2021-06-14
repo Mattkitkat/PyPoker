@@ -6,7 +6,6 @@ from Player import Player
 from Players import Players
 from Community import Community
 from Combinations import check_flush, check_two_pairs
-import itertools
 import time
 
 start_time = time.time()
@@ -29,7 +28,6 @@ for deal in range(1, max):
     turn = Turn([cards.deal()])
     burn3 = cards.deal()
     river = River([cards.deal()])
-    #print(f'{deal}:{flop}, {turn}, {river}')
 
     community = Community([]) + flop + turn + river
 
@@ -41,13 +39,7 @@ for deal in range(1, max):
         result = player.evaluate()
         if(result):
             timeseen += 1
-        #combinations = itertools.combinations(player, n)
-        #for hand in combinations:
-        #    result = check_flush(hand)
-        #    if(result):
-        #        timeseen += 1
 
-    #print(f'winners: {winners}')
 print(f'times flushes were dealt {timeseen} after this number of hands {max}')
 
 print("--- %s seconds ---" % (time.time() - start_time))

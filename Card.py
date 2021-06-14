@@ -14,4 +14,4 @@ class Card:
             return self.rank
         if item == 1:
             return self.suit
-        #consider throw
+        #todo: consider throw
