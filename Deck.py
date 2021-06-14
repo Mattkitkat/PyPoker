@@ -40,7 +40,8 @@ class Deck:
         self.cards[item]
 
     def deal(self):
-        return self.cards.pop()
+        if(self.cards):
+            return self.cards.pop()
     
     def slice_deck(self):
         randomness = random.uniform(-1, 1)
