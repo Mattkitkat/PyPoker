@@ -10,7 +10,7 @@ import time
 
 start_time = time.time()
 
-max = 100001
+max = 101
 timeseen = 0
 for deal in range(1, max):
     cards = Deck()

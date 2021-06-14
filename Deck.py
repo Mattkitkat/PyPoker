@@ -1,10 +1,10 @@
 import random
+from typing import Deque
 from Card import Card
 
 class Deck:
     suits = ['H', 'C', 'S', 'D']
     ranks = 15
-    cards = []
 
     def __init__(self) -> None:
         self.cards = []
@@ -27,6 +27,7 @@ class Deck:
         random.shuffle(self.cards)
 
         self.slice_deck()
+        self.cards = Deque(self.cards)
         
     
     def __len__(self):
@@ -39,7 +40,7 @@ class Deck:
         self.cards[item]
 
     def deal(self):
-        return self.cards.pop(len(self.cards)-1)
+        return self.cards.pop()
     
     def slice_deck(self):
         randomness = random.uniform(-1, 1)
