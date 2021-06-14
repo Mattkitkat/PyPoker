@@ -10,16 +10,17 @@ class Deck:
         self.cards = []
         for suit in self.suits:
             for rank in range(2, self.ranks):
-                if(rank == 10):
-                    rank = 'T'
-                if(rank == 11):
-                    rank = 'J'
-                if(rank == 12):
-                    rank = 'Q'
-                if(rank == 13):
-                    rank = 'K'
-                if(rank == 14):
-                    rank = 'A'
+                #todo move this to repr
+                # if(rank == 10):
+                #     rank = 'T'
+                # if(rank == 11):
+                #     rank = 'J'
+                # if(rank == 12):
+                #     rank = 'Q'
+                # if(rank == 13):
+                #     rank = 'K'
+                # if(rank == 14):
+                #     rank = 'A'
                 self.cards.append(Card(rank, suit))
         random.shuffle(self.cards)
         random.shuffle(self.cards)
@@ -35,9 +36,6 @@ class Deck:
     
     def __str__(self):
         return ', '.join(str(x) for x in reversed(self.cards))
-    
-    def __getitem__(self, item):
-        self.cards[item]
 
     def deal(self):
         if(self.cards):

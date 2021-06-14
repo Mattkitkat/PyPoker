@@ -7,6 +7,6 @@ class Players:
 
     def __getitem__(self, item):
         return self.players[item]
-    
-    def __setitem__(self, item, o):
-        self.players[item] = o
+
+    def add_player(self, item):
+        self.players.append(item)

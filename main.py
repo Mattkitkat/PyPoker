@@ -10,17 +10,21 @@ import time
 
 start_time = time.time()
 
-max = 101
-timeseen = 0
+max = 10001
+timeseenFlush = 0
+timeseenStraight = 0
+timeseenStraightFlush = 0
 for deal in range(1, max):
     cards = Deck()
     
     players = Players([])
 
     for player in range(3):
-        players = players + [Player([cards.deal()])]
-    
-    players[:] = [player + Player([cards.deal()]) for player in players]
+        x = Player([cards.deal()])
+        players.add_player(x)
+
+    for player in players:
+        player.add_card_to_hand(cards.deal())
 
     burn1 = cards.deal()
     flop = Flop([cards.deal(), cards.deal(), cards.deal()])
@@ -31,15 +35,24 @@ for deal in range(1, max):
 
     community = Community([]) + flop + turn + river
 
-    players[:] = [player + community for player in players]
+    for player in players:
+        for card in community:
+            player.add_card_to_hand(card)
 
     n = 5
     winners = 0
     for player in players:
         result = player.evaluate()
-        if(result):
-            timeseen += 1
+        if(result == 1):
+            timeseenFlush += 1
+        if(result == 2):
+            timeseenStraight += 1
+        if(result == 3):
+            timeseenStraightFlush +=1
+            
 
-print(f'times flushes were dealt {timeseen} after this number of hands {max}')
+print(f'times Flushes were dealt {timeseenFlush} after this number of hands {max}')
+print(f'times Straights were dealt {timeseenStraight} after this number of hands {max}')
+print(f'times StraightFlush were dealt {timeseenStraightFlush} after this number of hands {max}')
 
 print("--- %s seconds ---" % (time.time() - start_time))

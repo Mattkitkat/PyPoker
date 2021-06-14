@@ -4,3 +4,6 @@ class Community:
 
     def __add__(self, o):
         return Community(self.cards + o.cards)
+    
+    def __getitem__(self, item):
+        return self.cards[item]
