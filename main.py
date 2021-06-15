@@ -5,15 +5,19 @@ from River import River
 from Player import Player
 from Players import Players
 from Community import Community
-from Combinations import check_flush, check_two_pairs
 import time
 
 start_time = time.time()
 
 max = 10001
+#todo recheck propoer convention!
 timeseenFlush = 0
 timeseenStraight = 0
 timeseenStraightFlush = 0
+timeseenPair = 0
+timeseenTwoPair = 0
+timeseenThree = 0
+
 for deal in range(1, max):
     cards = Deck()
     
@@ -43,16 +47,13 @@ for deal in range(1, max):
     winners = 0
     for player in players:
         result = player.evaluate()
-        if(result == 1):
-            timeseenFlush += 1
-        if(result == 2):
-            timeseenStraight += 1
-        if(result == 3):
-            timeseenStraightFlush +=1
-            
 
-print(f'times Flushes were dealt {timeseenFlush} after this number of hands {max}')
-print(f'times Straights were dealt {timeseenStraight} after this number of hands {max}')
-print(f'times StraightFlush were dealt {timeseenStraightFlush} after this number of hands {max}')
+#todo fix this len thing as its not ideal
+print(f'times Flushes were dealt {len(players[0].flush)} after this number of hands {max}')
+print(f'times Straights were dealt {len(players[0].straight)} after this number of hands {max}')
+print(f'times StraightFlush were dealt {len(players[0].straightFlush)} after this number of hands {max}')
+print(f'times Three of a kind were dealt {len(players[0].three)} after this number of hands {max}')
+print(f'times Two Pairs were dealt {len(players[0].two)} after this number of hands {max}')
+print(f'times Pairs were dealt {len(players[0].pair)} after this number of hands {max}')
 
 print("--- %s seconds ---" % (time.time() - start_time))

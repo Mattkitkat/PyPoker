@@ -1,8 +1,15 @@
 from typing import Counter, Deque
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 import bisect
 
 class Player:
+    straight = []
+    straightFlush = []
+    flush = []
+    three = []
+    two = []
+    pair = [] 
+
     def __init__(self, cards):
         self.cards = []
         for card in cards:
@@ -23,11 +30,16 @@ class Player:
     def evaluate(self):
         straight = False
         flush = False
+        two_pair = False
+        pair = False
+        three_kind = False
+        value_counts = defaultdict(lambda:0)
 
         ranks = []
         for card in self.cards:
             if card.rank not in ranks:
                 ranks.append(card.rank)
+                value_counts[card.rank] += 1
         
         suits = [card.suit for card in self.cards]
         
@@ -37,24 +49,41 @@ class Player:
             flush = True
         
         #STRAIGHT #todo enhance this primitive behavior 
-        y = ranks.copy()[:5]
-        value_range = max(y) - min(y)
-        if (value_range==4):
-            straight = True
-        
-        y = ranks.copy()[1:6]
-        value_range = max(y) - min(y)
-        if (value_range==4):
-            straight = True
+        hand1 = ranks.copy()[:5]
+        hand2 = ranks.copy()[1:6]
+        hand3 = ranks.copy()[2:7]
+        hands = [hand1, hand2, hand3]
 
-        y = ranks.copy()[2:7]
-        value_range = max(y) - min(y)
-        if (value_range==4):
-            straight = True
-        
+        for hand in hands:
+            if(len(hand) == 5):
+                value_range = max(hand) - min(hand)
+                if (value_range == 4):
+                    straight = True
+
+                if set(value_counts.values()) == set([3,1]):
+                    three_kind = True
+                
+                if sorted(value_counts.values()) == [1,2,2]:
+                    two_pair = True
+                
+                if 2 in value_counts.values():
+                    pair = True
+
         if(straight and flush):
-            return 3
-        if straight and not flush:
-            return 2 
+            self.straightFlush.append(self)
+            return
         if(flush and not straight):
-            return 1
+            self.flush.append(self)
+            return
+        if straight and not flush:
+            self.straight.append(self)
+            return
+        if(three_kind):
+            self.three.append(self)
+            return
+        if(two_pair):
+            self.two.append(self)
+            return
+        if(pair):
+            self.pair.append(self)
+            return
