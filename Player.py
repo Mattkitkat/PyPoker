@@ -8,10 +8,12 @@ class Player:
     flush = []
     three = []
     two = []
-    pair = [] 
+    pair = []
 
     def __init__(self, cards):
         self.cards = []
+        self.ranks = []
+        self.suits = {}
         for card in cards:
             self.add_card_to_hand(card)
 
@@ -23,6 +25,11 @@ class Player:
     
     def add_card_to_hand(self, card):
         bisect.insort_left(self.cards, card)
+        bisect.insort_left(self.ranks, card.rank)
+        if(card.suit in self.suits):
+            self.suits[card.suit] += 1
+        else:
+            self.suits[card.suit] = 1
     
     def __add__(self, o):
         return Player(self.cards + o.cards)
@@ -33,57 +40,56 @@ class Player:
         two_pair = False
         pair = False
         three_kind = False
-        value_counts = defaultdict(lambda:0)
-
-        ranks = []
-        for card in self.cards:
-            if card.rank not in ranks:
-                ranks.append(card.rank)
-                value_counts[card.rank] += 1
-        
-        suits = [card.suit for card in self.cards]
         
         #FLUSH
-        x = Counter(suits).most_common(1)
-        if(x[0][1] == 5):
+
+        if(5 in self.suits.values()):
             flush = True
         
-        #STRAIGHT #todo enhance this primitive behavior 
-        hand1 = ranks.copy()[:5]
-        hand2 = ranks.copy()[1:6]
-        hand3 = ranks.copy()[2:7]
-        hands = [hand1, hand2, hand3]
+        hand1 = self.ranks[:5]
+        hand2 = self.ranks[1:6]
+        hand3 = self.ranks[2:7]
 
+        hands = [hand1, hand2, hand3]
+ 
         for hand in hands:
             if(len(hand) == 5):
+                #STRAIGHT
                 value_range = max(hand) - min(hand)
                 if (value_range == 4):
                     straight = True
 
+                value_counts = defaultdict(lambda:0)
+                for rank in hand:
+                    value_counts[rank] += 1
+
+                #Three of a kind
                 if set(value_counts.values()) == set([3,1]):
                     three_kind = True
                 
+                #Two pair
                 if sorted(value_counts.values()) == [1,2,2]:
                     two_pair = True
                 
+                #Pair
                 if 2 in value_counts.values():
                     pair = True
 
         if(straight and flush):
-            self.straightFlush.append(self)
+            self.straightFlush.append(True)
             return
         if(flush and not straight):
-            self.flush.append(self)
+            self.flush.append(True)
             return
         if straight and not flush:
-            self.straight.append(self)
+            self.straight.append(True)
             return
         if(three_kind):
-            self.three.append(self)
+            self.three.append(True)
             return
         if(two_pair):
-            self.two.append(self)
+            self.two.append(True)
             return
         if(pair):
-            self.pair.append(self)
+            self.pair.append(True)
             return
