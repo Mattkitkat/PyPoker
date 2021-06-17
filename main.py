@@ -10,7 +10,7 @@ import time
 start_time = time.time()
 
 max = 10001
-#todo recheck propoer convention!
+#todo recheck proper convention!
 timeseenFlush = 0
 timeseenStraight = 0
 timeseenStraightFlush = 0
@@ -50,6 +50,8 @@ for deal in range(1, max):
 
 #todo fix this len thing as its not ideal
 print(f'times Flushes were dealt {len(players[0].flush)} after this number of hands {max}')
+print(f'times fourKind were dealt {len(players[0].fourKind)} after this number of hands {max}')
+print(f'times fullHouse were dealt {len(players[0].fullHouse)} after this number of hands {max}')
 print(f'times Straights were dealt {len(players[0].straight)} after this number of hands {max}')
 print(f'times StraightFlush were dealt {len(players[0].straightFlush)} after this number of hands {max}')
 print(f'times Three of a kind were dealt {len(players[0].three)} after this number of hands {max}')

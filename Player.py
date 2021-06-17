@@ -9,6 +9,8 @@ class Player:
     three = []
     two = []
     pair = []
+    fourKind = []
+    fullHouse = []
 
     def __init__(self, cards):
         self.cards = []
@@ -40,6 +42,8 @@ class Player:
         two_pair = False
         pair = False
         three_kind = False
+        four_kind = False
+        full_house = False
         
         #FLUSH
 
@@ -63,6 +67,14 @@ class Player:
                 for rank in hand:
                     value_counts[rank] += 1
 
+                #Four of a kind
+                if sorted(value_counts.values()) == [1,4]:
+                    four_kind = True
+
+                #Full house
+                if sorted(value_counts.values()) == [2,3]:
+                    full_house = True
+                
                 #Three of a kind
                 if set(value_counts.values()) == set([3,1]):
                     three_kind = True
@@ -75,8 +87,15 @@ class Player:
                 if 2 in value_counts.values():
                     pair = True
 
+        #todo royal flush missing
         if(straight and flush):
             self.straightFlush.append(True)
+            return
+        if(four_kind):
+            self.fourKind.append(True)
+            return
+        if(full_house):
+            self.fullHouse.append(True)
             return
         if(flush and not straight):
             self.flush.append(True)
