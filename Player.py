@@ -16,6 +16,7 @@ class Player:
         self.cards = []
         self.ranks = []
         self.suits = {}
+        self.cardsBySuit = {}
         for card in cards:
             self.add_card_to_hand(card)
 
@@ -28,16 +29,20 @@ class Player:
     def add_card_to_hand(self, card):
         bisect.insort_left(self.cards, card)
         bisect.insort_left(self.ranks, card.rank)
+        
         if(card.suit in self.suits):
             self.suits[card.suit] += 1
+            bisect.insort_left(self.cardsBySuit[card.suit], card.rank)
         else:
             self.suits[card.suit] = 1
+            self.cardsBySuit[card.suit] = [card.rank]
     
     def __add__(self, o):
         return Player(self.cards + o.cards)
 
     def evaluate(self):
         straight = False
+        straightFlush = False
         flush = False
         two_pair = False
         pair = False
@@ -48,6 +53,17 @@ class Player:
         #FLUSH
 
         if(5 in self.suits.values()):
+            #todo move straight function to checkstraight function
+            flushHand = self.cardsBySuit[max(self.suits, key=self.suits.get)]
+            value_counts = defaultdict(lambda:0)
+            for rank in flushHand:
+                value_counts[rank] += 1
+
+            x = value_counts.keys()
+            if (len(x) == 5):
+                value_range = max(x) - min(x)
+                if (value_range == 4):
+                    straightFlush = True
             flush = True
         
         hand1 = self.ranks[:5]
@@ -58,14 +74,17 @@ class Player:
  
         for hand in hands:
             if(len(hand) == 5):
-                #STRAIGHT
-                value_range = max(hand) - min(hand)
-                if (value_range == 4):
-                    straight = True
-
                 value_counts = defaultdict(lambda:0)
                 for rank in hand:
                     value_counts[rank] += 1
+
+                #STRAIGHT #todo yet to identify highest card straight
+                if(not straightFlush):
+                    x = value_counts.keys()
+                    if (len(x) == 5):
+                        value_range = max(x) - min(x)
+                        if (value_range == 4):
+                            straight = True
 
                 #Four of a kind
                 if sorted(value_counts.values()) == [1,4]:
@@ -88,7 +107,7 @@ class Player:
                     pair = True
 
         #todo royal flush missing
-        if(straight and flush):
+        if(straightFlush):
             self.straightFlush.append(True)
             return
         if(four_kind):
